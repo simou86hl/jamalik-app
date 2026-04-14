@@ -119,10 +119,16 @@ export const NAV_LINKS: NavLink[] = [
 export const FOOTER_LINKS = {
   categories: CATEGORIES.map((c) => ({ label: c.name, slug: c.slug })),
   about: [
-    { label: 'من نحن', slug: '#' },
-    { label: 'سياسة الخصوصية', slug: '#' },
-    { label: 'شروط الاستخدام', slug: '#' },
-    { label: 'تواصل معنا', slug: '#' },
+    { label: 'من نحن', page: 'about' as const },
+    { label: 'سياسة الخصوصية', page: 'privacy' as const },
+    { label: 'شروط الاستخدام', page: 'about' as const },
+    { label: 'تواصل معنا', page: 'contact' as const },
+  ],
+  more: [
+    { label: 'الاختبارات', page: 'quiz' as const, icon: 'Brain' },
+    { label: 'مقارنة المنتجات', page: 'compare' as const, icon: 'GitCompareArrows' },
+    { label: 'الدعوة والأصدقاء', page: 'referral' as const, icon: 'Gift' },
+    { label: 'الإشعارات', page: 'notifications' as const, icon: 'Bell' },
   ],
 };
 

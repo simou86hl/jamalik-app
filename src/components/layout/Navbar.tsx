@@ -1,15 +1,46 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, Menu, X, Heart, User, Home, Sparkles, Bell, ShoppingBag } from 'lucide-react';
+import {
+  Search, Menu, X, Heart, User, Home, Sparkles,
+  Bell, ShoppingBag, Shirt, ChefHat, Scissors,
+  Dumbbell, Palette, Leaf, Brain, GitCompareArrows,
+  Gift, Globe, Info, FileText, Shield, Phone, ChevronLeft,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/store/useStore';
-import { NAV_LINKS, SITE_NAME } from '@/lib/constants';
+import { NAV_LINKS, SITE_NAME, FOOTER_LINKS } from '@/lib/constants';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import { VoiceSearch } from '@/components/shared/VoiceSearch';
 import { CartDrawer } from '@/components/shared/CartDrawer';
 import { cn } from '@/lib/utils';
+import type { SitePage, CategorySlug } from '@/types';
+
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  fashion: Shirt,
+  cooking: ChefHat,
+  skincare: Sparkles,
+  haircare: Scissors,
+  fitness: Dumbbell,
+  beauty: Palette,
+  health: Heart,
+  natural: Leaf,
+};
+
+const MORE_MENU_ITEMS: { label: string; page: SitePage; icon: React.ElementType }[] = [
+  { label: 'الاختبارات', page: 'quiz', icon: Brain },
+  { label: 'مقارنة المنتجات', page: 'compare', icon: GitCompareArrows },
+  { label: 'الدعوة والأصدقاء', page: 'referral', icon: Gift },
+  { label: 'الإشعارات', page: 'notifications', icon: Bell },
+];
+
+const USEFUL_LINKS: { label: string; page: SitePage; icon: React.ElementType }[] = [
+  { label: 'من نحن', page: 'about', icon: Info },
+  { label: 'سياسة الخصوصية', page: 'privacy', icon: Shield },
+  { label: 'شروط الاستخدام', page: 'about', icon: FileText },
+  { label: 'تواصل معنا', page: 'contact', icon: Phone },
+];
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -35,9 +66,20 @@ export function Navbar() {
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  const handleMobileNav = (page: SitePage) => {
+    navigateTo(page);
+    toggleMobileMenu();
+  };
+
+  const handleCategoryTap = (slug: CategorySlug) => {
+    useStore.getState().selectCategory(slug);
+    navigateTo('category');
+    toggleMobileMenu();
+  };
+
   return (
     <>
-      {/* Desktop & Tablet Navbar */}
+      {/* ═══ Desktop & Tablet Navbar ═══ */}
       <header
         className={cn(
           'sticky top-0 z-50 w-full transition-all duration-500 ease-out',
@@ -48,7 +90,7 @@ export function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo with glow hover */}
+            {/* Logo */}
             <button
               onClick={() => navigateTo('home')}
               className="flex items-center gap-2.5 cursor-pointer group"
@@ -62,7 +104,7 @@ export function Navbar() {
               </span>
             </button>
 
-            {/* Desktop Nav Links with gradient underline indicator */}
+            {/* Desktop Nav Links */}
             <nav className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <button
@@ -84,7 +126,6 @@ export function Navbar() {
                   )}
                 >
                   {link.label}
-                  {/* Gradient underline indicator for active link */}
                   {isActive(link.slug) && (
                     <motion.span
                       layoutId="nav-underline"
@@ -92,7 +133,6 @@ export function Navbar() {
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
-                  {/* Hover underline for inactive links */}
                   {!isActive(link.slug) && (
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-0 bg-gradient-primary rounded-full transition-all duration-300 group-hover:w-5" />
                   )}
@@ -100,7 +140,7 @@ export function Navbar() {
               ))}
             </nav>
 
-            {/* Right Actions with hover glow */}
+            {/* Right Actions */}
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleSearch}
@@ -118,7 +158,6 @@ export function Navbar() {
                 <Heart className="h-[18px] w-[18px] text-text-subtle transition-colors duration-300 group-hover:text-primary" />
               </button>
 
-              {/* Bell - Notifications */}
               <button
                 onClick={() => navigateTo('notifications')}
                 className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105 relative group"
@@ -132,7 +171,6 @@ export function Navbar() {
                 )}
               </button>
 
-              {/* Shopping Bag - Cart */}
               <button
                 onClick={() => setCartOpen(true)}
                 className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105 relative group"
@@ -141,7 +179,6 @@ export function Navbar() {
                 <ShoppingBag className="h-[18px] w-[18px] text-text-subtle transition-colors duration-300 group-hover:text-primary" />
               </button>
 
-              {/* Language Switcher (desktop only) */}
               <div className="hidden md:block">
                 <LanguageSwitcher />
               </div>
@@ -156,7 +193,6 @@ export function Navbar() {
 
               <ThemeToggle />
 
-              {/* Mobile Menu Button */}
               <button
                 onClick={toggleMobileMenu}
                 className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105"
@@ -173,7 +209,7 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
+      {/* ═══ Mobile Menu Overlay — Organized & Compact ═══ */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
@@ -189,88 +225,146 @@ export function Navbar() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-              className="fixed top-0 right-0 bottom-0 w-[300px] glass-strong z-50 lg:hidden shadow-[var(--shadow-xl)] gradient-border"
+              className="fixed top-0 right-0 bottom-0 w-[300px] glass-strong z-50 lg:hidden shadow-[var(--shadow-xl)]"
             >
-              <div className="flex flex-col h-full p-6">
-                {/* Logo */}
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 rounded-full bg-gradient-primary flex items-center justify-center">
-                      <Sparkles className="h-5 w-5 text-white" />
+              <div className="flex flex-col h-full">
+                {/* ─── Header ─── */}
+                <div className="flex items-center justify-between px-4 py-3 border-b border-border/30">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-primary flex items-center justify-center">
+                      <Sparkles className="h-4 w-4 text-white" />
                     </div>
-                    <span className="text-xl font-heading font-bold text-gradient">
+                    <span className="text-lg font-heading font-bold text-gradient">
                       {SITE_NAME}
                     </span>
                   </div>
                   <button
                     onClick={toggleMobileMenu}
-                    className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-glow)]"
+                    className="w-8 h-8 rounded-full flex items-center justify-center glass-subtle cursor-pointer transition-all duration-300"
                   >
-                    <X className="h-5 w-5 text-text-main" />
+                    <X className="h-4 w-4 text-text-main" />
                   </button>
                 </div>
 
-                {/* Nav Links */}
-                <nav className="flex flex-col gap-1.5 flex-1">
-                  {NAV_LINKS.map((link, index) => (
-                    <motion.button
-                      key={link.slug}
-                      initial={{ x: 40, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{
-                        type: 'spring',
-                        damping: 25,
-                        stiffness: 200,
-                        delay: index * 0.04,
-                      }}
-                      onClick={() => {
-                        if (link.slug === 'home') navigateTo('home');
-                        else if (link.slug === 'search') { toggleSearch(); toggleMobileMenu(); }
-                        else if (link.slug === 'favorites') navigateTo('favorites');
-                        else {
-                          useStore.getState().selectCategory(link.slug as 'fashion');
-                          navigateTo('category');
-                        }
-                        toggleMobileMenu();
-                      }}
-                      className={cn(
-                        'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer',
-                        isActive(link.slug)
-                          ? 'bg-primary/10 text-primary font-bold relative'
-                          : 'text-text-subtle hover:text-primary hover:bg-primary/5'
-                      )}
-                    >
-                      {isActive(link.slug) && (
-                        <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-gradient-primary" />
-                      )}
-                      {link.label}
-                    </motion.button>
-                  ))}
-                </nav>
+                {/* ─── Scrollable Content ─── */}
+                <div className="flex-1 overflow-y-auto no-scrollbar px-4 py-3 space-y-4">
+                  {/* ── الأقسام (Category Chips Grid) ── */}
+                  <div>
+                    <h4 className="text-[11px] font-bold text-text-subtle uppercase tracking-wider mb-2 px-1">
+                      الأقسام
+                    </h4>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {FOOTER_LINKS.categories.slice(0, 7).map((cat, index) => {
+                        const Icon = CATEGORY_ICONS[cat.slug];
+                        return (
+                          <motion.button
+                            key={cat.slug}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: index * 0.03 }}
+                            onClick={() => handleCategoryTap(cat.slug as CategorySlug)}
+                            className={cn(
+                              'flex items-center gap-1.5 px-2.5 py-2 rounded-xl text-[11px] font-medium transition-all duration-200 cursor-pointer',
+                              isActive(cat.slug)
+                                ? 'bg-primary/10 text-primary border border-primary/20'
+                                : 'glass-subtle text-text-subtle hover:text-primary hover:bg-primary/5'
+                            )}
+                          >
+                            {Icon && <Icon className="h-3.5 w-3.5 flex-shrink-0" />}
+                            <span className="truncate">{cat.label}</span>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-                {/* User Actions */}
-                <div className="border-t border-border/50 pt-4 space-y-2">
+                  {/* ── روابط مفيدة ── */}
+                  <div>
+                    <h4 className="text-[11px] font-bold text-text-subtle uppercase tracking-wider mb-2 px-1">
+                      روابط مفيدة
+                    </h4>
+                    <div className="space-y-0.5">
+                      {USEFUL_LINKS.map((link, i) => {
+                        const Icon = link.icon;
+                        return (
+                          <motion.button
+                            key={link.label}
+                            initial={{ opacity: 0, x: 12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.15 + i * 0.03 }}
+                            onClick={() => handleMobileNav(link.page)}
+                            className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-text-subtle hover:text-primary hover:bg-primary/5 transition-all duration-200 w-full cursor-pointer group"
+                          >
+                            <div className="w-6 h-6 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                              <Icon className="h-3 w-3" />
+                            </div>
+                            {link.label}
+                            <ChevronLeft className="h-3 w-3 mr-auto opacity-30" />
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* ── المزيد ── */}
+                  <div>
+                    <h4 className="text-[11px] font-bold text-text-subtle uppercase tracking-wider mb-2 px-1">
+                      المزيد
+                    </h4>
+                    <div className="space-y-0.5">
+                      {MORE_MENU_ITEMS.map((item, i) => {
+                        const Icon = item.icon;
+                        return (
+                          <motion.button
+                            key={item.page}
+                            initial={{ opacity: 0, x: 12 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 + i * 0.03 }}
+                            onClick={() => handleMobileNav(item.page)}
+                            className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-text-subtle hover:text-primary hover:bg-primary/5 transition-all duration-200 w-full cursor-pointer group"
+                          >
+                            <div className="w-6 h-6 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                              <Icon className="h-3 w-3" />
+                            </div>
+                            {item.label}
+                            {item.page === 'notifications' && unreadCount > 0 && (
+                              <span className="mr-auto bg-gradient-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                                {unreadCount > 9 ? '9+' : unreadCount}
+                              </span>
+                            )}
+                            {item.page !== 'notifications' && (
+                              <ChevronLeft className="h-3 w-3 mr-auto opacity-30" />
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                      {/* Language */}
+                      <motion.button
+                        initial={{ opacity: 0, x: 12 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 + MORE_MENU_ITEMS.length * 0.03 }}
+                        className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs text-text-subtle hover:text-primary hover:bg-primary/5 transition-all duration-200 w-full cursor-pointer group"
+                      >
+                        <div className="w-6 h-6 rounded-lg bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                          <Globe className="h-3 w-3" />
+                        </div>
+                        اللغة العربية
+                        <ChevronLeft className="h-3 w-3 mr-auto opacity-30" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ─── Bottom: Login + Theme ─── */}
+                <div className="border-t border-border/30 px-4 py-3 flex items-center gap-2">
                   <button
-                    onClick={() => { navigateTo('notifications'); toggleMobileMenu(); }}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium text-text-subtle hover:text-primary hover:bg-primary/5 transition-all w-full cursor-pointer"
+                    onClick={() => handleMobileNav('login')}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium glass-subtle text-text-subtle hover:text-primary hover:bg-primary/5 transition-all cursor-pointer"
                   >
-                    <span className="flex items-center gap-3">
-                      <Bell className="h-4 w-4" />
-                      الإشعارات
-                    </span>
-                    {unreadCount > 0 && (
-                      <span className="bg-gradient-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => { navigateTo('login'); toggleMobileMenu(); }}
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-text-subtle hover:text-primary hover:bg-primary/5 transition-all w-full cursor-pointer"
-                  >
-                    <User className="h-4 w-4" />
+                    <User className="h-3.5 w-3.5" />
                     تسجيل الدخول
                   </button>
+                  <ThemeToggle />
                 </div>
               </div>
             </motion.div>
@@ -278,78 +372,53 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Bottom Nav - Premium with floating active indicator */}
+      {/* ═══ Mobile Bottom Nav ═══ */}
       <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong lg:hidden safe-area-bottom border-t border-border/30">
-        <div className="flex items-center justify-around h-[72px] px-2">
-          <button
-            onClick={() => navigateTo('home')}
-            className={cn(
-              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
-              currentPage === 'home' ? 'text-primary' : 'text-text-subtle'
-            )}
-          >
-            {/* Floating gradient circle for active */}
-            {currentPage === 'home' && (
-              <motion.span
-                layoutId="bottom-nav-active"
-                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              />
-            )}
-            <Home className={cn('h-[22px] w-[22px] relative z-10', currentPage === 'home' && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
-            <span className="text-[10px] font-bold relative z-10">الرئيسية</span>
-          </button>
+        <div className="flex items-center justify-around h-[64px] px-2">
+          {[
+            { page: 'home' as SitePage, Icon: Home, label: 'الرئيسية' },
+            { page: 'search' as SitePage, Icon: Search, label: 'بحث', action: toggleSearch },
+            { page: 'favorites' as SitePage, Icon: Heart, label: 'المفضلة' },
+            { page: 'login' as SitePage, Icon: User, label: 'حسابي' },
+          ].map((tab) => {
+            const isActiveTab = tab.page === 'search'
+              ? false
+              : currentPage === tab.page || (tab.page === 'login' && currentPage === 'profile');
 
-          <button
-            onClick={toggleSearch}
-            className="relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl text-text-subtle transition-all duration-300 cursor-pointer"
-          >
-            <Search className="h-[22px] w-[22px]" />
-            <span className="text-[10px] font-medium">بحث</span>
-          </button>
-
-          <button
-            onClick={() => navigateTo('favorites')}
-            className={cn(
-              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
-              currentPage === 'favorites' ? 'text-primary' : 'text-text-subtle'
-            )}
-          >
-            {currentPage === 'favorites' && (
-              <motion.span
-                layoutId="bottom-nav-active"
-                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              />
-            )}
-            <Heart className={cn('h-[22px] w-[22px] relative z-10', currentPage === 'favorites' && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
-            <span className="text-[10px] font-bold relative z-10">المفضلة</span>
-          </button>
-
-          <button
-            onClick={() => navigateTo('login')}
-            className={cn(
-              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
-              currentPage === 'login' || currentPage === 'profile' ? 'text-primary' : 'text-text-subtle'
-            )}
-          >
-            {(currentPage === 'login' || currentPage === 'profile') && (
-              <motion.span
-                layoutId="bottom-nav-active"
-                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
-                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-              />
-            )}
-            <User className={cn('h-[22px] w-[22px] relative z-10', (currentPage === 'login' || currentPage === 'profile') && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
-            <span className="text-[10px] font-bold relative z-10">حسابي</span>
-          </button>
+            return (
+              <button
+                key={tab.page}
+                onClick={() => tab.action ? tab.action() : navigateTo(tab.page)}
+                className="relative flex flex-col items-center justify-center gap-0.5 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer"
+              >
+                {isActiveTab && (
+                  <motion.span
+                    layoutId="bottom-nav-active"
+                    className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
+                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <tab.Icon
+                  className={cn(
+                    'h-[20px] w-[20px] relative z-10 transition-all duration-300',
+                    isActiveTab
+                      ? 'text-primary drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]'
+                      : 'text-text-subtle'
+                  )}
+                />
+                <span className={cn(
+                  'text-[10px] relative z-10 transition-colors',
+                  isActiveTab ? 'font-bold text-primary' : 'font-medium text-text-subtle'
+                )}>
+                  {tab.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </nav>
 
-      {/* Voice Search - Floating */}
       <VoiceSearch />
-
-      {/* Cart Drawer */}
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );

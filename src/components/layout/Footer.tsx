@@ -2,10 +2,15 @@
 
 import { SITE_NAME, FOOTER_LINKS, SOCIAL_LINKS } from '@/lib/constants';
 import { useStore } from '@/store/useStore';
-import { Heart, Sparkles, Camera, MessageCircle, Users, Tv, Send, Film, Brain, GitCompareArrows, Gift, Bell, Globe } from 'lucide-react';
+import {
+  Heart, Sparkles, Camera, MessageCircle, Users,
+  Tv, Send, Film, Brain, GitCompareArrows, Gift,
+  Bell, Globe, Shirt, ChefHat, Scissors, Dumbbell,
+  Palette, Leaf, Mail, ArrowLeft,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import type { CategorySlug } from '@/types';
+import type { CategorySlug, SitePage } from '@/types';
 
 const SOCIAL_ICONS: Record<string, React.ElementType> = {
   instagram: Camera,
@@ -16,194 +21,215 @@ const SOCIAL_ICONS: Record<string, React.ElementType> = {
   snapchat: Send,
 };
 
-const MORE_LINKS = [
-  { label: 'الاختبارات', page: 'quiz' as const, icon: Brain },
-  { label: 'مقارنة المنتجات', page: 'compare' as const, icon: GitCompareArrows },
-  { label: 'الدعوة والأصدقاء', page: 'referral' as const, icon: Gift },
-  { label: 'الإشعارات', page: 'notifications' as const, icon: Bell },
-];
+const CATEGORY_ICONS: Record<string, React.ElementType> = {
+  fashion: Shirt,
+  cooking: ChefHat,
+  skincare: Sparkles,
+  haircare: Scissors,
+  fitness: Dumbbell,
+  beauty: Palette,
+  health: Heart,
+  natural: Leaf,
+};
+
+const MORE_ICONS: Record<string, React.ElementType> = {
+  Brain,
+  GitCompareArrows,
+  Gift,
+  Bell,
+};
 
 export function Footer() {
   const { navigateTo, selectCategory } = useStore();
 
-  return (
-    <footer className="bg-gradient-hero mt-16 pb-20 lg:pb-0 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-48 h-48 bg-secondary/5 rounded-full blur-3xl translate-x-1/4 translate-y-1/4" />
+  const handleCategoryClick = (slug: string) => {
+    selectCategory(slug as CategorySlug);
+    navigateTo('category');
+  };
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+  const handlePageNav = (page: SitePage) => {
+    navigateTo(page);
+  };
+
+  return (
+    <footer className="bg-gradient-hero mt-12 pb-20 lg:pb-0 relative overflow-hidden">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-primary/5 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
+      <div className="absolute bottom-0 left-0 w-40 h-40 bg-secondary/5 rounded-full blur-3xl -translate-x-1/4 translate-y-1/4" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+        {/* ─── Top Bar: Brand + Newsletter (compact) ─── */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8 pb-8 border-b border-border/30">
           {/* Brand */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)]">
-                <Sparkles className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-heading font-bold text-gradient">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center shadow-[var(--shadow-glow)]">
+              <Sparkles className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <span className="text-xl font-heading font-bold text-gradient block leading-tight">
                 {SITE_NAME}
               </span>
+              <p className="text-[11px] text-text-subtle leading-tight mt-0.5">
+                دليلك الشامل للجمال والعناية
+              </p>
             </div>
-            <p className="text-text-subtle text-sm leading-relaxed mb-4">
-              موقع شامل للمرأة العربية يغطي الموضة والطبخ والعناية بالبشرة والشعر
-              واللياقة والتجميل والصحة بنصائح ووصفات يومية.
-            </p>
-            {/* Social Icons with gradient hover */}
-            <div className="flex items-center gap-3 mt-5">
-              {SOCIAL_LINKS.map((social) => {
-                const Icon = SOCIAL_ICONS[social.icon] || MessageCircle;
+          </div>
+
+          {/* Social Icons */}
+          <div className="flex items-center gap-2">
+            {SOCIAL_LINKS.map((social) => {
+              const Icon = SOCIAL_ICONS[social.icon] || MessageCircle;
+              return (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-full glass-subtle flex items-center justify-center text-text-subtle transition-all duration-300 hover:bg-gradient-primary hover:text-white hover:shadow-[var(--shadow-glow)] hover:scale-110 cursor-pointer"
+                  aria-label={social.name}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Newsletter Mini */}
+          <div className="flex items-center gap-2 w-full md:w-auto">
+            <div className="relative flex-1 md:w-64">
+              <Mail className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-subtle/50" />
+              <input
+                type="email"
+                placeholder="بريدك الإلكتروني"
+                className="w-full pr-9 pl-4 py-2 text-xs glass-subtle rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 focus:shadow-[var(--shadow-glow)] text-text-main placeholder:text-text-subtle/40 transition-all duration-300"
+              />
+            </div>
+            <button className="btn-primary text-xs px-4 py-2 whitespace-nowrap">
+              اشتراك
+            </button>
+          </div>
+        </div>
+
+        {/* ─── Main Sections Grid ─── */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-8 pb-8 border-b border-border/30">
+          {/* ── الأقسام (7 categories as pill chips) ── */}
+          <div className="md:col-span-5">
+            <h3 className="font-heading font-bold text-gradient text-sm mb-3 flex items-center gap-2">
+              <div className="w-5 h-5 rounded-md bg-gradient-primary/10 flex items-center justify-center">
+                <span className="text-[10px]">✦</span>
+              </div>
+              الأقسام
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {FOOTER_LINKS.categories.slice(0, 7).map((cat, i) => {
+                const Icon = CATEGORY_ICONS[cat.slug];
                 return (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full glass-subtle flex items-center justify-center text-text-subtle transition-all duration-300 hover:bg-gradient-primary hover:text-white hover:shadow-[var(--shadow-glow)] hover:scale-110 cursor-pointer group"
-                    aria-label={social.name}
+                  <motion.button
+                    key={cat.slug}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.03 }}
+                    onClick={() => handleCategoryClick(cat.slug)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium glass-subtle text-text-subtle hover:text-primary hover:bg-primary/5 hover:border-primary/20 transition-all duration-300 cursor-pointer group hover:shadow-[var(--shadow-sm)]"
                   >
-                    <Icon className="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
-                  </a>
+                    {Icon && <Icon className="h-3 w-3 group-hover:text-primary transition-colors" />}
+                    {cat.label}
+                  </motion.button>
                 );
               })}
             </div>
           </div>
 
-          {/* Categories */}
-          <div>
-            <h3 className="font-heading font-bold text-gradient text-lg mb-4">الأقسام</h3>
-            <ul className="space-y-2.5">
-              {FOOTER_LINKS.categories.slice(0, 7).map((cat, i) => (
-                <motion.li
-                  key={cat.slug}
-                  initial={{ opacity: 0, x: 10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <button
-                    onClick={() => {
-                      selectCategory(cat.slug as CategorySlug);
-                      navigateTo('category');
-                    }}
-                    className="text-sm text-text-subtle hover:text-primary transition-colors cursor-pointer hover:translate-x-1 inline-block duration-200"
-                  >
-                    {cat.label}
-                  </button>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* About Links */}
-          <div>
-            <h3 className="font-heading font-bold text-gradient text-lg mb-4">روابط مفيدة</h3>
-            <ul className="space-y-2.5">
+          {/* ── روابط مفيدة ── */}
+          <div className="md:col-span-3">
+            <h3 className="font-heading font-bold text-gradient text-sm mb-3 flex items-center gap-2">
+              <div className="w-5 h-5 rounded-md bg-gradient-primary/10 flex items-center justify-center">
+                <span className="text-[10px]">◈</span>
+              </div>
+              روابط مفيدة
+            </h3>
+            <ul className="space-y-1">
               {FOOTER_LINKS.about.map((link, i) => (
                 <motion.li
                   key={i}
-                  initial={{ opacity: 0, x: 10 }}
+                  initial={{ opacity: 0, x: 8 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.04 }}
                 >
-                  <span className="text-sm text-text-subtle hover:text-primary transition-colors cursor-pointer hover:translate-x-1 inline-block duration-200">
+                  <button
+                    onClick={() => handlePageNav(link.page)}
+                    className="text-xs text-text-subtle hover:text-primary transition-all duration-200 cursor-pointer inline-flex items-center gap-1.5 group py-0.5"
+                  >
+                    <ArrowLeft className="h-2.5 w-2.5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
                     {link.label}
-                  </span>
+                  </button>
                 </motion.li>
               ))}
             </ul>
           </div>
 
-          {/* More Links */}
-          <div>
-            <h3 className="font-heading font-bold text-gradient text-lg mb-4">المزيد</h3>
-            <ul className="space-y-2.5">
-              {MORE_LINKS.map((link, i) => {
-                const Icon = link.icon;
+          {/* ── المزيد ── */}
+          <div className="md:col-span-4">
+            <h3 className="font-heading font-bold text-gradient text-sm mb-3 flex items-center gap-2">
+              <div className="w-5 h-5 rounded-md bg-gradient-primary/10 flex items-center justify-center">
+                <span className="text-[10px]">❖</span>
+              </div>
+              المزيد
+            </h3>
+            <div className="grid grid-cols-2 gap-1.5">
+              {FOOTER_LINKS.more.map((link, i) => {
+                const Icon = MORE_ICONS[link.icon];
                 return (
-                  <motion.li
+                  <motion.button
                     key={link.page}
-                    initial={{ opacity: 0, x: 10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={{ opacity: 0, y: 6 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.05 }}
+                    transition={{ delay: i * 0.04 }}
+                    onClick={() => handlePageNav(link.page)}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-text-subtle hover:text-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer group"
                   >
-                    <button
-                      onClick={() => navigateTo(link.page)}
-                      className="text-sm text-text-subtle hover:text-primary transition-colors cursor-pointer hover:translate-x-1 inline-flex items-center gap-2 duration-200"
-                    >
-                      <Icon className="h-3.5 w-3.5" />
-                      {link.label}
-                    </button>
-                  </motion.li>
+                    {Icon && <Icon className="h-3 w-3 group-hover:text-primary transition-colors" />}
+                    <span className="truncate">{link.label}</span>
+                  </motion.button>
                 );
               })}
-              {/* Language Switcher placeholder */}
-              <motion.li
-                initial={{ opacity: 0, x: 10 }}
-                whileInView={{ opacity: 1, x: 0 }}
+              {/* Language */}
+              <motion.button
+                initial={{ opacity: 0, y: 6 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: MORE_LINKS.length * 0.05 }}
+                transition={{ delay: FOOTER_LINKS.more.length * 0.04 }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-text-subtle hover:text-primary hover:bg-primary/5 transition-all duration-200 cursor-pointer group"
               >
-                <span className="text-sm text-text-subtle hover:text-primary transition-colors cursor-pointer hover:translate-x-1 inline-flex items-center gap-2 duration-200">
-                  <Globe className="h-3.5 w-3.5" />
-                  اللغة العربية
-                </span>
-              </motion.li>
-            </ul>
-          </div>
-
-          {/* Newsletter with gradient-border and glass effect */}
-          <div>
-            <h3 className="font-heading font-bold text-gradient text-lg mb-4">النشرة البريدية</h3>
-            <div className="gradient-border rounded-2xl">
-              <div className="glass p-5 rounded-2xl">
-                <p className="text-sm text-text-subtle mb-4 leading-relaxed">
-                  اشتركي لتلقي أحدث النصائح والوصفات مباشرة في بريدك
-                </p>
-                <div className="flex flex-col gap-3">
-                  <input
-                    type="email"
-                    placeholder="بريدك الإلكتروني"
-                    className="w-full px-4 py-2.5 text-sm glass-subtle rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/30 focus:shadow-[var(--shadow-glow)] text-text-main placeholder:text-text-subtle/50 transition-all duration-300"
-                  />
-                  <button className={cn(
-                    'btn-primary text-sm text-center',
-                    'px-4 py-2.5 w-full'
-                  )}>
-                    اشتراك
-                  </button>
-                </div>
-              </div>
+                <Globe className="h-3 w-3 group-hover:text-primary transition-colors" />
+                <span className="truncate">اللغة العربية</span>
+              </motion.button>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar with glass-subtle and pattern-arabic */}
-        <div className="mt-10 pt-6 relative">
-          <div className="glass-subtle rounded-2xl px-6 py-5 relative overflow-hidden">
-            {/* Decorative pattern overlay */}
-            <div className="absolute inset-0 pattern-arabic opacity-30 pointer-events-none" />
-            <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-text-subtle">
-                © {new Date().getFullYear()} {SITE_NAME}. جميع الحقوق محفوظة. صُنع بـ{' '}
-                <Heart className="inline h-3.5 w-3.5 text-primary fill-primary animate-pulse-heart" />
-              </p>
-              <div className="flex items-center gap-3">
-                {SOCIAL_LINKS.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-text-subtle hover:text-primary transition-colors cursor-pointer"
-                    aria-label={social.name}
-                  >
-                    {social.name}
-                  </a>
-                ))}
-              </div>
-            </div>
+        {/* ─── Bottom Bar ─── */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
+          <p className="text-[11px] text-text-subtle flex items-center gap-1">
+            © {new Date().getFullYear()} {SITE_NAME}. جميع الحقوق محفوظة.
+            <Heart className="h-3 w-3 text-primary fill-primary animate-pulse-heart" />
+          </p>
+          <div className="flex items-center gap-3">
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-text-subtle/60 hover:text-primary transition-colors cursor-pointer"
+                aria-label={social.name}
+              >
+                {social.name}
+              </a>
+            ))}
           </div>
         </div>
       </div>
