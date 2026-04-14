@@ -11,8 +11,8 @@ export function SearchModal() {
   const { isSearchOpen, closeSearch, selectArticle, selectRecipe, navigateTo } = useStore();
   const [query, setQuery] = useState('');
 
-  const results = useMemo(() => {
-    if (query.length < 2) return [];
+  const results = useMemo((): { articles: Article[]; recipes: Recipe[] } => {
+    if (query.length < 2) return { articles: [], recipes: [] };
     const q = query.toLowerCase();
     const articles: Article[] = ARTICLES.filter(
       (a) => a.title.includes(q) || a.excerpt.includes(q) || a.tags.some((t) => t.includes(q))
