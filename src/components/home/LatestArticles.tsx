@@ -8,7 +8,17 @@ import { ArticleCard } from '@/components/cards/ArticleCard';
 
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.5, cubicBezier: [0.16, 1, 0.3, 1] },
+  },
 };
 
 export function LatestArticles() {
@@ -25,14 +35,18 @@ export function LatestArticles() {
       variants={containerVariants}
       className="py-8"
     >
-      <div className="flex items-center justify-between mb-6">
+      {/* Section header */}
+      <motion.div
+        variants={itemVariants}
+        className="flex items-center justify-between mb-8"
+      >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <TrendingUp className="h-5 w-5 text-primary" />
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-md shadow-primary/20">
+            <TrendingUp className="h-5 w-5 text-white" />
           </div>
           <div>
             <h2 className="text-xl sm:text-2xl font-heading font-bold text-text-main">
-              أحدث المقالات
+              أحدث <span className="text-gradient">المقالات</span>
             </h2>
             <p className="text-text-subtle text-xs">اطلعي على الجديد في عالم الجمال</p>
           </div>
@@ -42,20 +56,18 @@ export function LatestArticles() {
             selectCategory('fashion');
             navigateTo('category');
           }}
-          className="hidden sm:flex items-center gap-1 text-sm text-primary hover:text-primary-dark font-medium transition-colors cursor-pointer"
+          className="btn-outline hidden sm:flex items-center gap-1.5 text-xs px-4 py-2 cursor-pointer"
         >
-          عرض الكل <ArrowLeft className="h-4 w-4" />
+          عرض الكل <ArrowLeft className="h-3.5 w-3.5" />
         </button>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
         {latest.map((article) => (
           <motion.div
             key={article.id}
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-            }}
+            variants={itemVariants}
           >
             <ArticleCard article={article} />
           </motion.div>

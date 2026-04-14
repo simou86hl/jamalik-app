@@ -24,33 +24,38 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const isActive = (slug: string) =>
+    currentPage === slug ||
+    (slug !== 'home' && slug !== 'search' && slug !== 'favorites' && currentPage === 'category' && useStore.getState().selectedCategory === slug);
+
   return (
     <>
       {/* Desktop & Tablet Navbar */}
       <header
         className={cn(
-          'sticky top-0 z-50 w-full transition-all duration-300',
+          'sticky top-0 z-50 w-full transition-all duration-500 ease-out',
           scrolled
-            ? 'bg-card/95 backdrop-blur-md shadow-md border-b border-border'
-            : 'bg-card/80 backdrop-blur-sm'
+            ? 'glass-strong border-b border-border/50 shadow-[var(--shadow-md)]'
+            : 'bg-transparent'
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+            {/* Logo with glow hover */}
             <button
               onClick={() => navigateTo('home')}
-              className="flex items-center gap-2 cursor-pointer group"
+              className="flex items-center gap-2.5 cursor-pointer group"
             >
-              <div className="w-9 h-9 rounded-full bg-gradient-primary flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-white" />
+              <div className="relative w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center transition-all duration-500 group-hover:shadow-[var(--shadow-glow)] group-hover:scale-105">
+                <Sparkles className="h-5 w-5 text-white relative z-10" />
+                <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-0 group-hover:opacity-60 blur-lg transition-opacity duration-500" />
               </div>
               <span className="text-xl font-heading font-bold text-gradient">
                 {SITE_NAME}
               </span>
             </button>
 
-            {/* Desktop Nav Links */}
+            {/* Desktop Nav Links with gradient underline indicator */}
             <nav className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map((link) => (
                 <button
@@ -65,41 +70,53 @@ export function Navbar() {
                           : navigateTo('category')
                   }
                   className={cn(
-                    'px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer',
-                    currentPage === link.slug || (link.slug !== 'home' && link.slug !== 'search' && link.slug !== 'favorites' && currentPage === 'category')
-                      ? 'bg-primary/10 text-primary font-bold'
-                      : 'text-text-subtle hover:text-primary hover:bg-primary/5'
+                    'relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 cursor-pointer group',
+                    isActive(link.slug)
+                      ? 'text-primary font-bold'
+                      : 'text-text-subtle hover:text-primary'
                   )}
                 >
                   {link.label}
+                  {/* Gradient underline indicator for active link */}
+                  {isActive(link.slug) && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] w-6 rounded-full bg-gradient-primary"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  {/* Hover underline for inactive links */}
+                  {!isActive(link.slug) && (
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] w-0 bg-gradient-primary rounded-full transition-all duration-300 group-hover:w-5" />
+                  )}
                 </button>
               ))}
             </nav>
 
-            {/* Right Actions */}
+            {/* Right Actions with hover glow */}
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleSearch}
-                className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"
+                className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105 group"
                 aria-label="بحث"
               >
-                <Search className="h-5 w-5 text-text-subtle" />
+                <Search className="h-[18px] w-[18px] text-text-subtle transition-colors duration-300 group-hover:text-primary" />
               </button>
 
               <button
                 onClick={() => navigateTo('favorites')}
-                className="w-9 h-9 rounded-full flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer relative"
+                className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105 relative group"
                 aria-label="المفضلة"
               >
-                <Heart className="h-5 w-5 text-text-subtle" />
+                <Heart className="h-[18px] w-[18px] text-text-subtle transition-colors duration-300 group-hover:text-primary" />
               </button>
 
               <button
                 onClick={() => navigateTo('login')}
-                className="hidden sm:flex w-9 h-9 rounded-full items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"
+                className="hidden sm:flex w-9 h-9 rounded-full items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105 group"
                 aria-label="حسابي"
               >
-                <User className="h-5 w-5 text-text-subtle" />
+                <User className="h-[18px] w-[18px] text-text-subtle transition-colors duration-300 group-hover:text-primary" />
               </button>
 
               <ThemeToggle />
@@ -107,7 +124,7 @@ export function Navbar() {
               {/* Mobile Menu Button */}
               <button
                 onClick={toggleMobileMenu}
-                className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center hover:bg-primary/10 transition-colors cursor-pointer"
+                className="lg:hidden w-9 h-9 rounded-full flex items-center justify-center glass-subtle transition-all duration-300 cursor-pointer hover:shadow-[var(--shadow-glow)] hover:scale-105"
                 aria-label="القائمة"
               >
                 {isMobileMenuOpen ? (
@@ -129,20 +146,20 @@ export function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
               onClick={toggleMobileMenu}
             />
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-[280px] bg-card z-50 lg:hidden shadow-2xl"
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+              className="fixed top-0 right-0 bottom-0 w-[300px] glass-strong z-50 lg:hidden shadow-[var(--shadow-xl)] gradient-border"
             >
               <div className="flex flex-col h-full p-6">
                 {/* Logo */}
                 <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2.5">
                     <div className="w-9 h-9 rounded-full bg-gradient-primary flex items-center justify-center">
                       <Sparkles className="h-5 w-5 text-white" />
                     </div>
@@ -152,17 +169,25 @@ export function Navbar() {
                   </div>
                   <button
                     onClick={toggleMobileMenu}
-                    className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-primary/10 cursor-pointer"
+                    className="w-9 h-9 rounded-full flex items-center justify-center glass-subtle cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-glow)]"
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-5 w-5 text-text-main" />
                   </button>
                 </div>
 
                 {/* Nav Links */}
-                <nav className="flex flex-col gap-1 flex-1">
-                  {NAV_LINKS.map((link) => (
-                    <button
+                <nav className="flex flex-col gap-1.5 flex-1">
+                  {NAV_LINKS.map((link, index) => (
+                    <motion.button
                       key={link.slug}
+                      initial={{ x: 40, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{
+                        type: 'spring',
+                        damping: 25,
+                        stiffness: 200,
+                        delay: index * 0.04,
+                      }}
                       onClick={() => {
                         if (link.slug === 'home') navigateTo('home');
                         else if (link.slug === 'search') { toggleSearch(); toggleMobileMenu(); }
@@ -175,18 +200,21 @@ export function Navbar() {
                       }}
                       className={cn(
                         'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all cursor-pointer',
-                        currentPage === link.slug
-                          ? 'bg-primary/10 text-primary font-bold'
+                        isActive(link.slug)
+                          ? 'bg-primary/10 text-primary font-bold relative'
                           : 'text-text-subtle hover:text-primary hover:bg-primary/5'
                       )}
                     >
+                      {isActive(link.slug) && (
+                        <span className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full bg-gradient-primary" />
+                      )}
                       {link.label}
-                    </button>
+                    </motion.button>
                   ))}
                 </nav>
 
                 {/* User Actions */}
-                <div className="border-t border-border pt-4 space-y-2">
+                <div className="border-t border-border/50 pt-4 space-y-2">
                   <button
                     onClick={() => { navigateTo('login'); toggleMobileMenu(); }}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-text-subtle hover:text-primary hover:bg-primary/5 transition-all w-full cursor-pointer"
@@ -201,48 +229,70 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Bottom Nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border lg:hidden safe-area-bottom">
-        <div className="flex items-center justify-around h-16 px-4">
+      {/* Mobile Bottom Nav - Premium with floating active indicator */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 glass-strong lg:hidden safe-area-bottom border-t border-border/30">
+        <div className="flex items-center justify-around h-[72px] px-2">
           <button
             onClick={() => navigateTo('home')}
             className={cn(
-              'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-all cursor-pointer',
+              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
               currentPage === 'home' ? 'text-primary' : 'text-text-subtle'
             )}
           >
-            <Home className="h-5 w-5" />
-            <span className="text-[10px] font-medium">الرئيسية</span>
+            {/* Floating gradient circle for active */}
+            {currentPage === 'home' && (
+              <motion.span
+                layoutId="bottom-nav-active"
+                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+            <Home className={cn('h-[22px] w-[22px] relative z-10', currentPage === 'home' && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
+            <span className="text-[10px] font-bold relative z-10">الرئيسية</span>
           </button>
 
           <button
             onClick={toggleSearch}
-            className="flex flex-col items-center gap-1 px-3 py-1 rounded-lg text-text-subtle transition-all cursor-pointer"
+            className="relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl text-text-subtle transition-all duration-300 cursor-pointer"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-[22px] w-[22px]" />
             <span className="text-[10px] font-medium">بحث</span>
           </button>
 
           <button
             onClick={() => navigateTo('favorites')}
             className={cn(
-              'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-all cursor-pointer',
+              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
               currentPage === 'favorites' ? 'text-primary' : 'text-text-subtle'
             )}
           >
-            <Heart className="h-5 w-5" />
-            <span className="text-[10px] font-medium">المفضلة</span>
+            {currentPage === 'favorites' && (
+              <motion.span
+                layoutId="bottom-nav-active"
+                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+            <Heart className={cn('h-[22px] w-[22px] relative z-10', currentPage === 'favorites' && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
+            <span className="text-[10px] font-bold relative z-10">المفضلة</span>
           </button>
 
           <button
             onClick={() => navigateTo('login')}
             className={cn(
-              'flex flex-col items-center gap-1 px-3 py-1 rounded-lg transition-all cursor-pointer',
+              'relative flex flex-col items-center justify-center gap-1 w-16 h-12 rounded-2xl transition-all duration-300 cursor-pointer',
               currentPage === 'login' || currentPage === 'profile' ? 'text-primary' : 'text-text-subtle'
             )}
           >
-            <User className="h-5 w-5" />
-            <span className="text-[10px] font-medium">حسابي</span>
+            {(currentPage === 'login' || currentPage === 'profile') && (
+              <motion.span
+                layoutId="bottom-nav-active"
+                className="absolute inset-0 rounded-2xl bg-gradient-primary/10 border border-primary/20"
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+            <User className={cn('h-[22px] w-[22px] relative z-10', (currentPage === 'login' || currentPage === 'profile') && 'drop-shadow-[0_0_6px_rgba(194,24,91,0.5)]')} />
+            <span className="text-[10px] font-bold relative z-10">حسابي</span>
           </button>
         </div>
       </nav>

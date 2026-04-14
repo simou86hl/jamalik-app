@@ -5,7 +5,7 @@ import "./globals.css";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
-  weight: ["700", "800", "900"],
+  weight: ["400", "600", "700", "800", "900"],
   variable: "--font-heading",
   display: "swap",
 });

@@ -28,100 +28,170 @@ export function ArticlePage() {
     (a) => a.category === article.category && a.id !== article.id
   ).slice(0, 3);
 
+  const titleWords = article.title.split(' ');
+  const firstLine = titleWords.slice(0, Math.ceil(titleWords.length / 2)).join(' ');
+  const secondLine = titleWords.slice(Math.ceil(titleWords.length / 2)).join(' ');
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
       className="py-6"
     >
-      {/* Back */}
-      <button
+      {/* Back Button */}
+      <motion.button
+        whileHover={{ x: 4 }}
         onClick={goBack}
-        className="flex items-center gap-2 text-sm text-text-subtle hover:text-primary transition-colors mb-6 cursor-pointer"
+        className="flex items-center gap-2 text-sm text-text-subtle hover:text-primary transition-colors mb-6 cursor-pointer group"
       >
-        <ArrowRight className="h-4 w-4" /> العودة
-      </button>
+        <span className="glass-subtle rounded-full p-1.5 group-hover:bg-primary/10 transition-colors">
+          <ArrowRight className="h-4 w-4" />
+        </span>
+        العودة
+      </motion.button>
 
-      {/* Hero Image */}
-      <div className="relative aspect-[21/9] rounded-2xl overflow-hidden mb-6">
+      {/* Hero Image with gradient overlay & pattern */}
+      <motion.div
+        initial={{ opacity: 0, y: 12, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+        className="relative aspect-[21/9] rounded-3xl overflow-hidden mb-8"
+      >
         <img src={article.thumbnail} alt={article.title} className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        <div className="absolute bottom-4 right-4">
-          <span className="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        {/* Pattern overlay */}
+        <div className="absolute inset-0 pattern-dots opacity-[0.06]" />
+        {/* Category badge with glass effect */}
+        <div className="absolute bottom-5 right-5">
+          <span className="glass px-4 py-1.5 rounded-full text-white text-xs font-bold bg-gradient-primary border-0">
             {cat?.name}
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Title & Meta */}
       <div className="max-w-3xl">
-        <h1 className="text-2xl sm:text-3xl font-heading font-bold text-text-main leading-relaxed mb-4">
-          {article.title}
-        </h1>
+        {/* Title with gradient first line */}
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold leading-relaxed mb-6"
+        >
+          <span className="text-gradient">{firstLine}</span>
+          {' '}
+          <span className="text-text-main">{secondLine}</span>
+        </motion.h1>
 
-        <div className="flex flex-wrap items-center gap-4 text-text-subtle text-xs mb-6 pb-4 border-b border-border">
-          <span className="flex items-center gap-1">
-            <User className="h-3.5 w-3.5" /> {article.author}
+        {/* Meta info pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25 }}
+          className="flex flex-wrap items-center gap-3 text-text-subtle text-xs mb-8"
+        >
+          <span className="glass-subtle px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <User className="h-3.5 w-3.5 text-primary/70" /> {article.author}
           </span>
-          <span className="flex items-center gap-1">
-            <Calendar className="h-3.5 w-3.5" /> {formatDate(article.publishedAt)}
+          <span className="glass-subtle px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Calendar className="h-3.5 w-3.5 text-primary/70" /> {formatDate(article.publishedAt)}
           </span>
-          <span className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" /> {getReadingTime(article.content)} دقائق قراءة
+          <span className="glass-subtle px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5 text-primary/70" /> {getReadingTime(article.content)} دقائق قراءة
           </span>
-          <span className="flex items-center gap-1">
-            <Eye className="h-3.5 w-3.5" /> {article.stats.views} مشاهدة
+          <span className="glass-subtle px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <Eye className="h-3.5 w-3.5 text-primary/70" /> {article.stats.views} مشاهدة
           </span>
-        </div>
+        </motion.div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-3 mb-8">
-          <button
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+          className="flex items-center gap-3 mb-10"
+        >
+          <motion.button
+            whileTap={{ scale: 0.95 }}
             onClick={() => toggleFavorite(article.id, 'article')}
             className={cn(
-              'flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all cursor-pointer',
-              saved ? 'bg-primary text-white' : 'bg-card border border-border text-text-subtle hover:border-primary/30'
+              'flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-medium transition-all duration-300 cursor-pointer',
+              saved
+                ? 'bg-gradient-primary text-white shadow-[var(--shadow-glow)]'
+                : 'glass-subtle text-text-subtle hover:text-primary'
             )}
           >
             <Heart className={cn('h-4 w-4', saved && 'fill-white')} />
             {saved ? 'محفوظ' : 'حفظ'}
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium bg-card border border-border text-text-subtle hover:border-primary/30 transition-all cursor-pointer">
+          </motion.button>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-medium glass-subtle text-text-subtle hover:text-primary transition-all duration-300 cursor-pointer"
+          >
             <Share2 className="h-4 w-4" /> مشاركة
-          </button>
-          <span className="flex items-center gap-1 text-xs text-text-subtle mr-auto">
+          </motion.button>
+          <span className="flex items-center gap-1.5 text-xs text-text-subtle mr-auto glass-subtle px-3 py-1.5 rounded-full">
             <Heart className="h-3.5 w-3.5 text-primary" /> {article.stats.likes}
           </span>
-        </div>
+        </motion.div>
 
-        {/* Content */}
-        <div
-          className="prose prose-lg max-w-none text-text-main leading-[1.9] text-[15px]
-            [&_h3]:font-heading [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-text-main [&_h3]:mt-8 [&_h3]:mb-3
-            [&_p]:mb-4 [&_p]:text-text-main/90"
+        {/* Content Area with enhanced typography */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="prose prose-lg max-w-none text-text-main leading-[2] text-[15px]
+            [&_h3]:font-heading [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-gradient [&_h3]:mt-10 [&_h3]:mb-4
+            [&_p]:mb-5 [&_p]:text-text-main/90 [&_p]:leading-[2]
+            [&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-gradient [&_h2]:mt-10 [&_h2]:mb-4
+            [&_blockquote]:gradient-border [&_blockquote]:rounded-xl [&_blockquote]:bg-accent/5 [&_blockquote]:p-5
+            [&_blockquote]:my-6 [&_blockquote]:text-text-secondary [&_blockquote]:italic [&_blockquote]:text-sm]
+            [&_blockquote]:border-r-4 [&_blockquote]:border-r-accent
+            [&_ul]:list-disc [&_ul]:pr-6 [&_ul]:space-y-2
+            [&_ol]:list-decimal [&_ol]:pr-6 [&_ol]:space-y-2
+            [&_strong]:text-text-main [&_strong]:font-bold
+            [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2
+            [&_img]:rounded-2xl [&_img]:my-6"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-border">
-          {article.tags.map((tag) => (
-            <span key={tag} className="px-3 py-1 bg-input-bg rounded-full text-xs text-text-subtle">
+        {/* Tags with gradient background */}
+        <div className="flex flex-wrap gap-2 mt-10 pt-8 border-t border-border">
+          {article.tags.map((tag, i) => (
+            <motion.span
+              key={tag}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              className="px-3.5 py-1.5 bg-gradient-primary/10 text-primary text-xs font-medium rounded-full border border-primary/15"
+            >
               #{tag}
-            </span>
+            </motion.span>
           ))}
         </div>
 
-        {/* Related Articles */}
+        {/* Related Articles Section */}
         {related.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-xl font-heading font-bold text-text-main mb-4">مقالات ذات صلة</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {related.map((a) => (
-                <ArticleCard key={a.id} article={a} />
-              ))}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-14"
+          >
+            <div className="gradient-border rounded-2xl p-6 sm:p-8 bg-card">
+              <h2 className="text-xl font-heading font-bold text-text-main mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-6 rounded-full bg-gradient-primary" />
+                مقالات ذات صلة
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {related.map((a) => (
+                  <ArticleCard key={a.id} article={a} />
+                ))}
+              </div>
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </motion.div>
