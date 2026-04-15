@@ -26,6 +26,21 @@ import { NotificationPage } from '@/components/pages/NotificationPage';
 import { DailyCalendarPage } from '@/components/pages/DailyCalendarPage';
 import { AdminPage } from '@/components/pages/AdminPage';
 import { VideoPage } from '@/components/pages/VideoPage';
+import { AiChatPage } from '@/components/pages/AiChatPage';
+import { AiRecipePage } from '@/components/pages/AiRecipePage';
+import { SkinAnalyzerPage } from '@/components/pages/SkinAnalyzerPage';
+import { StyleAdvisorPage } from '@/components/pages/StyleAdvisorPage';
+import { GamificationPage } from '@/components/pages/GamificationPage';
+import { ExpertSessionsPage } from '@/components/pages/ExpertSessionsPage';
+import { ProductScannerPage } from '@/components/pages/ProductScannerPage';
+import { RecipeLabPage } from '@/components/pages/RecipeLabPage';
+import { WardrobePage } from '@/components/pages/WardrobePage';
+import { VideoStudioPage } from '@/components/pages/VideoStudioPage';
+import { ChallengesPage } from '@/components/pages/ChallengesPage';
+import { BeautyDnaPage } from '@/components/pages/BeautyDnaPage';
+import { HabitTrackerPage } from '@/components/pages/HabitTrackerPage';
+import { CycleTrackerPage } from '@/components/pages/CycleTrackerPage';
+import { CommunityPage } from '@/components/pages/CommunityPage';
 import { ScrollToTopButton } from '@/components/shared/ScrollToTopButton';
 
 const pageVariants = {
@@ -263,6 +278,186 @@ export default function Home() {
               exit="exit"
             >
               <VideoPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'ai-chat' && (
+            <motion.div
+              key="ai-chat"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <AiChatPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'ai-recipe' && (
+            <motion.div
+              key="ai-recipe"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <AiRecipePage />
+            </motion.div>
+          )}
+
+          {currentPage === 'skin-analyzer' && (
+            <motion.div
+              key="skin-analyzer"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <SkinAnalyzerPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'style-advisor' && (
+            <motion.div
+              key="style-advisor"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <StyleAdvisorPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'gamification' && (
+            <motion.div
+              key="gamification"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <GamificationPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'expert-sessions' && (
+            <motion.div
+              key="expert-sessions"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <ExpertSessionsPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'product-scanner' && (
+            <motion.div
+              key="product-scanner"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <ProductScannerPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'recipe-lab' && (
+            <motion.div
+              key="recipe-lab"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <RecipeLabPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'wardrobe' && (
+            <motion.div
+              key="wardrobe"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <WardrobePage />
+            </motion.div>
+          )}
+
+          {currentPage === 'video-studio' && (
+            <motion.div
+              key="video-studio"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <VideoStudioPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'challenges' && (
+            <motion.div
+              key="challenges"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <ChallengesPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'beauty-dna' && (
+            <motion.div
+              key="beauty-dna"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <BeautyDnaPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'habit-tracker' && (
+            <motion.div
+              key="habit-tracker"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <HabitTrackerPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'cycle-tracker' && (
+            <motion.div
+              key="cycle-tracker"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <CycleTrackerPage />
+            </motion.div>
+          )}
+
+          {currentPage === 'community' && (
+            <motion.div
+              key="community"
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <CommunityPage />
             </motion.div>
           )}
         </AnimatePresence>

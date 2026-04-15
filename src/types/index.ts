@@ -8,7 +8,12 @@ export type SitePage =
   | 'favorites' | 'profile' | 'login' | 'register' | 'admin'
   | 'about' | 'contact' | 'privacy' | 'quiz' | 'compare'
   | 'newsletter' | 'referral' | 'reading-mode' | 'skin-quiz'
-  | 'notifications' | 'daily-calendar' | 'videos';
+  | 'notifications' | 'daily-calendar' | 'videos'
+  // New features
+  | 'ai-chat' | 'ai-recipe' | 'skin-analyzer' | 'style-advisor'
+  | 'gamification' | 'challenges' | 'beauty-dna' | 'habit-tracker'
+  | 'cycle-tracker' | 'community' | 'expert-sessions'
+  | 'product-scanner' | 'recipe-lab' | 'wardrobe' | 'video-studio';
 
 /** Video category slug */
 export type VideoCategorySlug =
@@ -325,4 +330,136 @@ export interface UserRating {
   rating: number;
   comment: string;
   createdAt: string;
+}
+
+// ============================================================
+// Phase 3 — New Feature Types
+// ============================================================
+
+// AI Chat message
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+// Gamification
+export interface GamificationState {
+  points: number;
+  level: number;
+  streak: number;
+  lastActiveDate: string | null;
+  badges: string[];
+  completedActions: string[];
+}
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  requirement: number;
+  category: string;
+}
+
+// Habit tracker
+export interface Habit {
+  id: string;
+  name: string;
+  icon: string;
+  category: 'health' | 'beauty' | 'fitness' | 'wellness' | 'spiritual';
+  target: number;
+  unit: string;
+  log: Record<string, number>; // date -> value
+}
+
+// Cycle tracker
+export interface CycleDay {
+  date: string;
+  phase: 'menstrual' | 'follicular' | 'ovulation' | 'luteal';
+  symptoms: string[];
+  mood: 'great' | 'good' | 'okay' | 'bad' | 'terrible' | null;
+  notes: string;
+  flowLevel: number;
+}
+
+export interface CycleData {
+  averageLength: number;
+  periodLength: number;
+  lastPeriodDate: string;
+  log: CycleDay[];
+}
+
+// Community post
+export interface CommunityPost {
+  id: string;
+  authorName: string;
+  authorAvatar: string;
+  content: string;
+  images: string[];
+  category: CategorySlug;
+  likes: number;
+  comments: number;
+  isLiked: boolean;
+  createdAt: string;
+  tags: string[];
+}
+
+// Challenge
+export interface Challenge {
+  id: string;
+  title: string;
+  description: string;
+  duration: number; // days
+  category: CategorySlug;
+  participants: number;
+  icon: string;
+  isActive: boolean;
+  joinedDate: string | null;
+  progress: number;
+  tasks: string[];
+}
+
+// Expert session
+export interface ExpertSession {
+  id: string;
+  expertName: string;
+  specialty: string;
+  avatar: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  duration: string;
+  isLive: boolean;
+  isRegistered: boolean;
+  category: CategorySlug;
+}
+
+// Wardrobe item
+export interface WardrobeItem {
+  id: string;
+  name: string;
+  category: 'top' | 'bottom' | 'dress' | 'outerwear' | 'shoes' | 'accessory' | 'scarf' | 'bag';
+  color: string;
+  season: 'spring' | 'summer' | 'fall' | 'winter' | 'all';
+  occasion: 'casual' | 'formal' | 'work' | 'party' | 'sport';
+  image: string;
+  brand: string;
+  favorite: boolean;
+}
+
+// Natural recipe lab
+export interface LabRecipe {
+  id: string;
+  name: string;
+  ingredients: { name: string; amount: string; has: boolean }[];
+  steps: string[];
+  benefits: string[];
+  warnings: string[];
+  skinType: SkinType[];
+  pregnancySafe: boolean;
+  duration: string;
+  category: 'skin' | 'hair' | 'body' | 'face';
 }

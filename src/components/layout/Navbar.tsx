@@ -7,6 +7,8 @@ import {
   Dumbbell, Palette, Leaf, Brain, GitCompareArrows,
   Gift, Globe, Info, FileText, Shield, Phone, ChevronLeft,
   Video, Play, Clock, Eye, ThumbsUp, Filter,
+  MessageCircle, Wand2, Scan, Trophy, Target, Dna,
+  CheckCircle, Flower2, Users, Radio, ScanLine, FlaskConical, Film,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/store/useStore';
@@ -30,6 +32,21 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 const MORE_MENU_ITEMS: { label: string; page: SitePage; icon: React.ElementType }[] = [
+  { label: 'مساعد جمالكِ الذكي', page: 'ai-chat', icon: MessageCircle },
+  { label: 'مولّد الوصفات الذكي', page: 'ai-recipe', icon: Wand2 },
+  { label: 'محلل البشرة والشعر', page: 'skin-analyzer', icon: Scan },
+  { label: 'مستشار الأزياء الذكي', page: 'style-advisor', icon: Sparkles },
+  { label: 'نقاط جمالكِ', page: 'gamification', icon: Trophy },
+  { label: 'التحديات الجماعية', page: 'challenges', icon: Target },
+  { label: 'ملف جمالكِ الشخصي', page: 'beauty-dna', icon: Dna },
+  { label: 'متتبع العادات', page: 'habit-tracker', icon: CheckCircle },
+  { label: 'متتبع الدورة الشهرية', page: 'cycle-tracker', icon: Flower2 },
+  { label: 'مجتمع جمالكِ', page: 'community', icon: Users },
+  { label: 'جلسات الخبراء', page: 'expert-sessions', icon: Radio },
+  { label: 'ماسح المنتجات', page: 'product-scanner', icon: ScanLine },
+  { label: 'مختبر الوصفات الطبيعية', page: 'recipe-lab', icon: FlaskConical },
+  { label: 'خزانة ملابسي', page: 'wardrobe', icon: Shirt },
+  { label: 'استوديو الفيديوهات', page: 'video-studio', icon: Film },
   { label: 'الاختبارات', page: 'quiz', icon: Brain },
   { label: 'مقارنة المنتجات', page: 'compare', icon: GitCompareArrows },
   { label: 'الدعوة والأصدقاء', page: 'referral', icon: Gift },
