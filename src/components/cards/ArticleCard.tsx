@@ -70,8 +70,6 @@ export function ArticleCard({ article, horizontal = false }: ArticleCardProps) {
 
   const handleClick = () => {
     selectArticle(article);
-    navigateTo('article');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (horizontal) {

@@ -62,15 +62,14 @@ export function PersonalizedSuggestions() {
         </div>
       </div>
 
-      {/* Horizontal scroll of ArticleCards */}
-      <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory">
+      {/* Horizontal scroll of compact ArticleCards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {suggestions.map((article, i) => (
           <motion.div
             key={article.id}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            className="min-w-[280px] sm:min-w-[300px] flex-shrink-0 snap-start"
           >
             <ArticleCard article={article} />
           </motion.div>

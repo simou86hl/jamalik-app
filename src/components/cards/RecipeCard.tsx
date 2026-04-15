@@ -49,8 +49,6 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
 
   const handleClick = () => {
     selectRecipe(recipe);
-    navigateTo('recipe');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const isTopRated = recipe.rating.average >= 4.5;
@@ -68,7 +66,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
       }}
     >
       {/* Thumbnail */}
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden">
         <img
           src={recipe.thumbnail}
           alt={recipe.title}

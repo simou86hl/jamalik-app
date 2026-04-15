@@ -104,7 +104,7 @@ export function LatestRecipes() {
           {featured.map((recipe, i) => (
             <div
               key={recipe.id}
-              className="min-w-[300px] lg:min-w-0 flex-shrink-0"
+              className="min-w-[260px] lg:min-w-0 flex-shrink-0"
             >
               {i === 0 && (
                 <motion.div

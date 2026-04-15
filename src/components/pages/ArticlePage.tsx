@@ -17,7 +17,13 @@ import { PersonalizedSuggestions } from '@/components/shared/PersonalizedSuggest
 import { formatDate, getReadingTime, cn } from '@/lib/utils';
 
 export function ArticlePage() {
-  const { selectedArticle, goBack, toggleFavorite, isFavorite } = useStore();
+  const { selectedArticle, goBack, toggleFavorite, isFavorite, fontSize, toggleReadingMode } = useStore();
+
+  const fontSizeMap = {
+    small: 'text-[13px]',
+    medium: 'text-[15px]',
+    large: 'text-[18px]',
+  };
 
   if (!selectedArticle) {
     return (
@@ -156,6 +162,7 @@ export function ArticlePage() {
           <div className="w-px h-5 bg-border/50" />
           <motion.button
             whileTap={{ scale: 0.95 }}
+            onClick={toggleReadingMode}
             className="flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-medium glass-subtle text-text-subtle hover:text-primary transition-all duration-300 cursor-pointer"
             type="button"
             aria-label="وضع القراءة"
@@ -171,18 +178,21 @@ export function ArticlePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.35 }}
-            className="prose prose-lg max-w-none text-text-main leading-[2] text-[15px]
-              [&_h3]:font-heading [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-gradient [&_h3]:mt-10 [&_h3]:mb-4
-              [&_p]:mb-5 [&_p]:text-text-main/90 [&_p]:leading-[2]
-              [&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-gradient [&_h2]:mt-10 [&_h2]:mb-4
-              [&_blockquote]:gradient-border [&_blockquote]:rounded-xl [&_blockquote]:bg-accent/5 [&_blockquote]:p-5
-              [&_blockquote]:my-6 [&_blockquote]:text-text-secondary [&_blockquote]:italic [&_blockquote]:text-sm]
-              [&_blockquote]:border-r-4 [&_blockquote]:border-r-accent
-              [&_ul]:list-disc [&_ul]:pr-6 [&_ul]:space-y-2
-              [&_ol]:list-decimal [&_ol]:pr-6 [&_ol]:space-y-2
-              [&_strong]:text-text-main [&_strong]:font-bold
-              [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2
-              [&_img]:rounded-2xl [&_img]:my-6"
+            className={cn(
+              'prose prose-lg max-w-none text-text-main leading-[2] transition-[font-size] duration-300',
+              fontSizeMap[fontSize],
+              '[&_h3]:font-heading [&_h3]:font-bold [&_h3]:text-lg [&_h3]:text-gradient [&_h3]:mt-10 [&_h3]:mb-4',
+              '[&_p]:mb-5 [&_p]:text-text-main/90 [&_p]:leading-[2]',
+              '[&_h2]:font-heading [&_h2]:font-bold [&_h2]:text-xl [&_h2]:text-gradient [&_h2]:mt-10 [&_h2]:mb-4',
+              '[&_blockquote]:gradient-border [&_blockquote]:rounded-xl [&_blockquote]:bg-accent/5 [&_blockquote]:p-5',
+              '[&_blockquote]:my-6 [&_blockquote]:text-text-secondary [&_blockquote]:italic [&_blockquote]:text-sm',
+              '[&_blockquote]:border-r-4 [&_blockquote]:border-r-accent',
+              '[&_ul]:list-disc [&_ul]:pr-6 [&_ul]:space-y-2',
+              '[&_ol]:list-decimal [&_ol]:pr-6 [&_ol]:space-y-2',
+              '[&_strong]:text-text-main [&_strong]:font-bold',
+              '[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2',
+              '[&_img]:rounded-2xl [&_img]:my-6'
+            )}
             dangerouslySetInnerHTML={{ __html: article.content }}
           />
         </ReadingModeOverlay>

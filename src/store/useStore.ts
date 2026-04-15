@@ -162,15 +162,20 @@ export const useStore = create<JamaliStore>()(
       completedQuizzes: [],
 
       // Actions
-      navigateTo: (page) =>
+      navigateTo: (page) => {
         set((state) => ({
           previousPage: state.currentPage,
           currentPage: page,
           isMobileMenuOpen: false,
           isSearchOpen: false,
-        })),
+        }));
+        // Scroll to top on every navigation
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
 
-      goBack: () =>
+      goBack: () => {
         set((state) => ({
           currentPage: state.previousPage || "home",
           previousPage: null,
@@ -178,7 +183,11 @@ export const useStore = create<JamaliStore>()(
           selectedRecipe: null,
           selectedCategory: null,
           selectedQuizId: null,
-        })),
+        }));
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
 
       selectCategory: (slug) =>
         set({
@@ -191,14 +200,26 @@ export const useStore = create<JamaliStore>()(
       selectSubcategory: (name) =>
         set({ selectedSubcategory: name }),
 
-      selectArticle: (article) =>
-        set({ selectedArticle: article, currentPage: "article" }),
+      selectArticle: (article) => {
+        set({ selectedArticle: article, currentPage: "article" });
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
 
-      selectRecipe: (recipe) =>
-        set({ selectedRecipe: recipe, currentPage: "recipe" }),
+      selectRecipe: (recipe) => {
+        set({ selectedRecipe: recipe, currentPage: "recipe" });
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
 
-      selectQuiz: (quizId) =>
-        set({ selectedQuizId: quizId, currentPage: "quiz" }),
+      selectQuiz: (quizId) => {
+        set({ selectedQuizId: quizId, currentPage: "quiz" });
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      },
 
       setSearchQuery: (query) => set({ searchQuery: query }),
 
