@@ -24,7 +24,7 @@ export function ScrollToTopButton() {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
           onClick={scrollUp}
-          className="fixed bottom-20 left-5 z-50 w-12 h-12 rounded-full bg-gradient-primary text-white shadow-[var(--shadow-md)] flex items-center justify-center cursor-pointer hover:shadow-[var(--shadow-glow)] transition-shadow duration-300 lg:bottom-8"
+          className="fixed bottom-20 right-5 z-50 w-12 h-12 rounded-full bg-gradient-primary text-white shadow-[var(--shadow-md)] flex items-center justify-center cursor-pointer hover:shadow-[var(--shadow-glow)] transition-shadow duration-300 lg:bottom-8 lg:right-8"
           aria-label="العودة للأعلى"
           type="button"
         >
